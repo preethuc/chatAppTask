@@ -54,12 +54,53 @@ export const createUser = async (req, res) => {
   }
 };
 
+//PUT - Add contact
+export const addContact = async (req, res)=>{
+  try {
+    const user_id = req.params.id;
+    const data = await User.findById(user_id).exec();
+    let contact = data.contact;
+    console.log(contact);
+    if (data) {
+      contact.push(req.body.contact);
+      User.findByIdAndUpdate(
+        user_id,
+        { contact: contact },
+        { new: true },
+        function (err, result) {
+          if (err) {
+            console.log(err);
+            return res.json({
+              success: true,
+              message: err.message,
+            });
+          } else {
+            return res.json({
+              success: true,
+              message: "contact added",
+              data: result,
+            });
+          }
+        }
+      );
+    }
+  }
+  catch (err) {
+      res.status(400).json({
+        status: "fail",
+        message: "Error",
+        error: err.message,
+      });
+    }
+  }
+
 //GET -  All User
 export const getAllUser = async (req, res) => {
   try {
-    const data = await User.find();
+    const data = await User.find().populate("contact","name")
     return res.status(200).json({
       status: "Success",
+      result:data.length,
       message: "All Users",
       Data: data,
     });
@@ -71,3 +112,4 @@ export const getAllUser = async (req, res) => {
     });
   }
 };
+

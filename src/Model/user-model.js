@@ -5,9 +5,10 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
     },
-    contact: {
-      type: String,
-    },
+    contact:[ {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"User"
+    }],
 
     profile_image: {
       type: String,
@@ -15,6 +16,6 @@ const userSchema = new mongoose.Schema(
   },
   { versionKey: false }
 );
-const User = mongoose.model("Product", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
